@@ -1,6 +1,6 @@
 import random
 import tkinter as tk
-
+from agent import SearchAgent
 
 class VisualGridHuntGame:
     """A flexible Pacman-style grid environment with support for configurable opponents, toxic traps and agent architectures."""
@@ -144,9 +144,24 @@ class VisualGridHuntGame:
         # agent_pos is NOT returned.
         # Only local Boolean information is returned.
         return {
+
+            "agent_pos": tuple(self.agent_pos),
             "wall_ahead": wall_ahead,
             "food_here": food_here,
-            "smells_toxin": smells_toxin
+            "smells_toxin": smells_toxin,
+
+            "grid_size": (
+                self.width,
+                self.height
+            ),
+
+            "walls": list(
+                self.walls
+            ),
+
+            "all_food": list(
+                self.food_positions
+            )
         }
 
     # Turn agent left
@@ -602,12 +617,11 @@ class GridGameGUI:
 
         # LAB 02 AGENT
 
+        #self.agent = SimpleReflexAgent()
 
-        # For Step 1.2 testing use:
-        self.agent = SimpleReflexAgent()
+        self.agent = SearchAgent()
 
-        # For Step 1.3 testing use:
-        #self.agent = ModelBasedAgent()
+        self.agent.active_algo = "BFS"
 
         # Canvas setup
 
@@ -824,46 +838,6 @@ class GridGameGUI:
             outline="#1e3a8a"
         )
 
-        # Draw direction arrow
-        center_x = (
-            ax * self.cell_size
-            + self.cell_size / 2
-        )
-
-        center_y = (
-            self.env.height
-            - 1
-            - ay
-        ) * self.cell_size + self.cell_size / 2
-
-        arrow_length = (
-            self.cell_size * 0.25
-        )
-
-        dx = 0
-        dy = 0
-
-        if self.env.agent_direction == "Up":
-            dy = -arrow_length
-
-        elif self.env.agent_direction == "Down":
-            dy = arrow_length
-
-        elif self.env.agent_direction == "Left":
-            dx = -arrow_length
-
-        elif self.env.agent_direction == "Right":
-            dx = arrow_length
-
-        self.canvas.create_line(
-            center_x,
-            center_y,
-            center_x + dx,
-            center_y + dy,
-            fill="white",
-            width=3,
-            arrow=tk.LAST
-        )
 
     # Simulation loop
 
